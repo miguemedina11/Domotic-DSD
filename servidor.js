@@ -4,10 +4,6 @@ var fs = require("fs");
 var path = require("path");
 var socketio = require("socket.io");
 var request = require('request')
-const config = require('./config');
-const twitter = require('twitter-lite');
-const clientTWT = new twitter(config);
-
 
 var MongoClient = require('mongodb').MongoClient;
 var MongoServer = require('mongodb').Server;
@@ -157,26 +153,7 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
 
             function tweet(data){
 
-                var auxaire;
-                if (data.ac == 0){
-                    auxaire = "OFF";
-                }
-                else{
-                    auxaire = "ON";
-                }
-                var auxpers;
-                if (data.pers == 0){
-                    auxpers = "Bajada";
-                }
-                else{
-                    auxpers = "Subida";
-                }
-
-                var msg = "Actualizacion en el Servidor ---> Temperatura: "+data.temp+"  |  Luminosidad: "+data.lumi + "  |  Aire Acondicionado: "+ auxaire+ "  |  Persiana: "+ auxpers;
-
-                clientTWT.post('statuses/update', { status: msg }).then(result => {
-                    
-                }).catch(console.error);
+                
             }
 
 
