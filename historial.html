@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Practica 4 DSD</title>
+</head>
+
+<body>
+
+<style>
+    input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-control:focus {
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  outline:none;
+}
+</style>
+    
+
+
+<header>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="/usuario.html">Inicio</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/sensores.html">Sensores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/historial.html">Historial</a>
+        </li>
+    </ul>
+</header>
+
+<main>
+    <div class="container"><br>
+        <div id="historial"></div>
+    </div>
+</main>
+
+
+
+
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+    function actualizarLista(cambios){
+        var listContainer = document.getElementById('historial');
+        listContainer.innerHTML = '';
+        var listElement = document.createElement('ul');
+        listElement.className="list-group list-group-flush";
+        listContainer.appendChild(listElement);
+        var num = cambios.length;
+        for(var i=2; i<num; i++) {
+            var listItem = document.createElement('li');
+            listItem.className = "list-group-item";
+            var auxaire;
+            if (cambios[i].ac == 0){
+                auxaire = "OFF";
+            }
+            else{
+                auxaire = "ON";
+            }
+            var auxpers;
+            if (cambios[i].pers == 0){
+                auxpers = "Bajada";
+            }
+            else{
+                auxpers = "Subida";
+            }
+            listItem.innerHTML = "Fecha: "+cambios[i].time+" ---> Temperatura: "+cambios[i].temp+"  |  Luminosidad: "+cambios[i].lumi + "  |  Aire Acondicionado: "+ auxaire+ "  |  Persiana: "+ auxpers;
+            listElement.appendChild(listItem);
+        }
+    }
+    
+    var serviceURL = "localhost:8080";
+    var socket = io.connect(serviceURL);
+    
+    socket.on('conexion', function(data) {
+        socket.emit('obtener',{});
+    });
+
+    socket.on('obtener', function(data) {
+        actualizarLista(data);
+    });
+
+</script>
+
+</html>
